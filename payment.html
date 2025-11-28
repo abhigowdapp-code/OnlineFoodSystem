@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Food Order System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .payment-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .payment-header h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-header p {
+            color: #7f8c8d;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .payment-method {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .payment-method:hover {
+            border-color: #3498db;
+        }
+
+        .payment-method.selected {
+            border-color: #3498db;
+            background: #f7f9fc;
+        }
+
+        .payment-method i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .payment-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .order-summary {
+            background: #f7f9fc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .order-summary h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .order-items {
+            margin-bottom: 1rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            color: #2c3e50;
+            padding-top: 1rem;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .pay-button {
+            background: #3498db;
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .pay-button:hover {
+            background: #2980b9;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #27ae60;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #eafaf1;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1>Complete Your Payment</h1>
+            <p>Secure and easy payment process</p>
+        </div>
+
+        <div class="payment-methods">
+            <div class="payment-method selected" data-method="card">
+                <i class="fas fa-credit-card"></i>
+                <h3>Credit Card</h3>
+            </div>
+            <div class="payment-method" data-method="upi">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>UPI</h3>
+            </div>
+            <div class="payment-method" data-method="netbanking">
+                <i class="fas fa-university"></i>
+                <h3>Net Banking</h3>
+            </div>
+        </div>
+
+        <form id="paymentForm" class="payment-form">
+            <div class="form-group">
+                <label for="cardNumber">Card Number</label>
+                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                <div class="error-message" id="cardNumberError"></div>
+            </div>
+
+            <div class="card-details">
+                <div class="form-group">
+                    <label for="cardName">Name on Card</label>
+                    <input type="text" id="cardName" placeholder="John Doe">
+                    <div class="error-message" id="cardNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="expiry">Expiry</label>
+                    <input type="text" id="expiry" placeholder="MM/YY" maxlength="5">
+                    <div class="error-message" id="expiryError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="password" id="cvv" placeholder="123" maxlength="3">
+                    <div class="error-message" id="cvvError"></div>
+                </div>
+            </div>
+
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="order-items" id="orderItems">
+                    <!-- Order items will be dynamically added here -->
+                </div>
+                <div class="order-total">
+                    <span>Total Amount:</span>
+                    <span id="totalAmount">₹0.00</span>
+                </div>
+            </div>
+
+            <button type="submit" class="pay-button">Pay Now</button>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle" style="font-size: 3rem;"></i>
+            <h2>Payment Successful!</h2>
+            <p>Your order has been confirmed.</p>
+        </div>
+    </div>
+
+    <script>
+       
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '');
+            if (value.length > 0) {
+                value = value.match(new RegExp('.{1,4}', 'g')).join(' ');
+            }
+            e.target.value = value;
+        });
+
+       
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0,2) + '/' + value.slice(2);
+            }
+            e.target.value = value;
+        });
+
+        
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        
+        const form = document.getElementById('paymentForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            const cardNumber = document.getElementById('cardNumber').value;
+            const cardName = document.getElementById('cardName').value;
+            const expiry = document.getElementById('expiry').value;
+            const cvv = document.getElementById('cvv').value;
+
+            
+            document.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
+
+            
+            if (!/^\d{4}\s\d{4}\s\d{4}\s\d{4}$/.test(cardNumber)) {
+                document.getElementById('cardNumberError').textContent = 'Please enter a valid 16-digit card number';
+                document.getElementById('cardNumberError').style.display = 'block';
+                isValid = false;
+            }
+
+           
+            if (!cardName.trim()) {
+                document.getElementById('cardNameError').textContent = 'Please enter the name on card';
+                document.getElementById('cardNameError').style.display = 'block';
+                isValid = false;
+            }
+
+            
+            if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+                document.getElementById('expiryError').textContent = 'Please enter a valid expiry date (MM/YY)';
+                document.getElementById('expiryError').style.display = 'block';
+                isValid = false;
+            }
+
+            
+            if (!/^\d{3}$/.test(cvv)) {
+                document.getElementById('cvvError').textContent = 'Please enter a valid 3-digit CVV';
+                document.getElementById('cvvError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isValid) {
+                
+                const payButton = document.querySelector('.pay-button');
+                payButton.textContent = 'Processing...';
+                payButton.disabled = true;
+
+                setTimeout(() => {
+                    form.style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                }, 2000);
+            }
+        });
+
+        
+        function loadOrderItems() {
+            const orderItems = document.getElementById('orderItems');
+            const totalAmount = document.getElementById('totalAmount');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            let total = 299;
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'order-item';
+                itemElement.innerHTML = `
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>₹${(item.price * item.quantity).toFixed(2)}</span>
+                `;
+                orderItems.appendChild(itemElement);
+                total += item.price * item.quantity;
+            });
+
+            totalAmount.textContent = `₹${total.toFixed(2)}`;
+        }
+
+        
+        loadOrderItems();
+    </script>
+</body>
+</html> 

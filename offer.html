@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Offers - Food Delivery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="offer.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Special Offers</h1>
+            <p class="subtitle">Limited time deals on your favorite foods</p>
+        </header>
+
+
+        <section class="special-offers">
+            <h2>Today's Special Offers</h2>
+            <div class="offers-carousel">
+                <button class="carousel-btn prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="offers-container" id="specialOffers">
+
+                </div>
+                <button class="carousel-btn next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <section class="food-items">
+            <div class="section-header">
+                <h2>Featured Food Items</h2>
+                <div class="filters">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search food items...">
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="pizza">Pizza</button>
+                        <button class="filter-btn" data-filter="burger">Burgers</button>
+                        <button class="filter-btn" data-filter="pasta">Pasta</button>
+                        <button class="filter-btn" data-filter="dessert">Desserts</button>
+                    </div>
+                </div>
+            </div>
+            <div class="food-grid" id="foodGrid">
+
+            </div>
+        </section>
+    </div>
+    <script src="offer.js"></script>
+</body>
+
+</html>
